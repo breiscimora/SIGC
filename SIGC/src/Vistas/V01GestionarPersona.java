@@ -6,21 +6,18 @@
 package Vistas;
 
 import Beans.UsuarioBE;
-import Services.TextPrompt;
-//import Services.TextPrompt;
 import Services.UsuarioBL;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -28,7 +25,6 @@ import javax.swing.table.TableModel;
  */
 public class V01GestionarPersona extends javax.swing.JInternalFrame {
 
-    SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
     /**
      * Creates new form v01GestionarPersona
      */
@@ -36,9 +32,9 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
     UsuarioBL oUsuarioBL = new UsuarioBL();
 
     //TERCER PASO
-    private void cargarDatosInicialesTabla1(String algo) {
+    private void cargarDatosInicialesTabla1() {
         //Importar Persona Beans <Persona>
-        List<UsuarioBE> listaPersonas = oUsuarioBL.listarPersonas(algo);
+        List<UsuarioBE> listaPersonas = oUsuarioBL.listarPersonas();
 
         //QUINTO PASO
         DefaultTableModel modelo;
@@ -68,6 +64,26 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
             modelo.addRow(registro);
         }
         TBLPERSONA.setModel(modelo);
+    }
+
+    public V01GestionarPersona() {
+        initComponents();
+        centrarVentana();
+
+        //REALIZA LOS FILTROS(BUSQUEDAS)
+        TXTBUSCAR.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(final KeyEvent e) {
+
+                repaint();
+                filtro();
+            }
+        });
+
+//----------------Titulo del formulario-----------------------------------------
+        this.setTitle("GESTIONAR PERSONA");
+        cargarDatosInicialesTabla1();
+
 //----------------Para ocultar un columna (Columna ID)--------------------------
         TBLPERSONA.getColumnModel().getColumn(0).setMaxWidth(0);
         TBLPERSONA.getColumnModel().getColumn(0).setMinWidth(0);
@@ -116,89 +132,6 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
         TBLPERSONA.getTableHeader().getColumnModel().getColumn(10).setMaxWidth(0);
         TBLPERSONA.getTableHeader().getColumnModel().getColumn(10).setMaxWidth(0);
 
-    }
-
-    private void nocargarDatosInicialesTabla1(String algo) {
-        //Importar Persona Beans <Persona>
-//        List<UsuarioBE> listaPersonas = oUsuarioBL.listarPersonas(algo);
-
-        //QUINTO PASO
-        DefaultTableModel modelo;
-
-        String[] titulo = {"NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO"};
-        modelo = new DefaultTableModel(null, titulo);
-        TBLPERSONA.setModel(modelo);
-    }
-
-    public V01GestionarPersona() {
-        initComponents();
-        centrarVentana();
-
-//--------------------AGREGANDO UN PLACEHOLDERS---------------------------------
-//        TextPrompt nacimiento = new TextPrompt("dd/mm/aaaa", TXTNACIMIENTO);
-        TextPrompt email = new TextPrompt("ejemplo@gmail.com", TXTEMAIL);
-        
-
-        //REALIZA LOS FILTROS(BUSQUEDAS)
-//        TXTBUSCAR.addKeyListener(new KeyAdapter() {
-//            @Override
-//            public void keyReleased(final KeyEvent e) {
-//
-//                repaint();
-//                filtro();
-//            }
-//        });
-//----------------Titulo del formulario-----------------------------------------
-        this.setTitle("GESTIONAR PERSONA");
-        nocargarDatosInicialesTabla1(TXTBUSCAR.getText());
-
-////----------------Para ocultar un columna (Columna ID)--------------------------
-//        TBLPERSONA.getColumnModel().getColumn(0).setMaxWidth(0);
-//        TBLPERSONA.getColumnModel().getColumn(0).setMinWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(0).setMaxWidth(0);
-//
-////----------------Para ocultar un columna (Columna Fecha de Nacimiento)---------
-//        TBLPERSONA.getColumnModel().getColumn(4).setMaxWidth(0);
-//        TBLPERSONA.getColumnModel().getColumn(4).setMinWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(4).setMaxWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(4).setMaxWidth(0);
-//
-////----------------Para ocultar un columna (Columna DNI)-------------------------
-//        TBLPERSONA.getColumnModel().getColumn(5).setMaxWidth(0);
-//        TBLPERSONA.getColumnModel().getColumn(5).setMinWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(5).setMaxWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(5).setMaxWidth(0);
-//
-////----------------Para ocultar un columna (Columna Celular)---------------------
-//        TBLPERSONA.getColumnModel().getColumn(6).setMaxWidth(0);
-//        TBLPERSONA.getColumnModel().getColumn(6).setMinWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(6).setMaxWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(6).setMaxWidth(0);
-//
-////----------------Para ocultar un columna (Columna Dirección)-------------------
-//        TBLPERSONA.getColumnModel().getColumn(7).setMaxWidth(0);
-//        TBLPERSONA.getColumnModel().getColumn(7).setMinWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(7).setMaxWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(7).setMaxWidth(0);
-//
-////----------------Para ocultar un columna (Columna EMAIL)-------------------
-//        TBLPERSONA.getColumnModel().getColumn(8).setMaxWidth(0);
-//        TBLPERSONA.getColumnModel().getColumn(8).setMinWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(8).setMaxWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(8).setMaxWidth(0);
-//
-//        //----------------Para ocultar un columna (Columna Facebook)-------------------
-//        TBLPERSONA.getColumnModel().getColumn(9).setMaxWidth(0);
-//        TBLPERSONA.getColumnModel().getColumn(9).setMinWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(9).setMaxWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(9).setMaxWidth(0);
-//
-//        //----------------Para ocultar un columna (Columna Estado)-------------------
-//        TBLPERSONA.getColumnModel().getColumn(10).setMaxWidth(0);
-//        TBLPERSONA.getColumnModel().getColumn(10).setMinWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(10).setMaxWidth(0);
-//        TBLPERSONA.getTableHeader().getColumnModel().getColumn(10).setMaxWidth(0);
 //        TBLPERSONA.getColumnModel().getColumn(11).setMaxWidth(0);
 //        TBLPERSONA.getColumnModel().getColumn(11).setMinWidth(0);
 //        TBLPERSONA.getTableHeader().getColumnModel().getColumn(11).setMaxWidth(0);
@@ -283,8 +216,7 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
         TXTNOMBRE = new javax.swing.JTextField();
         TXTAPEPATERNO = new javax.swing.JTextField();
         TXTAPEMATERNO = new javax.swing.JTextField();
-        TXTNACIMIENTO1 = new javax.swing.JTextField();
-        TXTNACIMIENTO = new com.toedter.calendar.JDateChooser();
+        TXTNACIMIENTO = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -418,13 +350,11 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(CHKESTADO)
                     .addComponent(TXTID, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TXTNACIMIENTO, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TXTNOMBRE)
                     .addComponent(TXTAPEPATERNO)
-                    .addComponent(TXTAPEMATERNO, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                    .addComponent(TXTNACIMIENTO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                .addComponent(TXTNACIMIENTO1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41))
+                    .addComponent(TXTAPEMATERNO, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
+                .addContainerGap(210, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -446,16 +376,14 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
                     .addComponent(jLabel6)
                     .addComponent(TXTAPEMATERNO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel7)
-                        .addComponent(TXTNACIMIENTO1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
                     .addComponent(TXTNACIMIENTO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(CHKESTADO))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("DATOS PERSONALES", jPanel3);
@@ -488,8 +416,9 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
                     .addComponent(TXTDIRECCION)
                     .addComponent(TXTEMAIL)
                     .addComponent(TXTFACEBOOK, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
-                    .addComponent(TXTCELULAR, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                    .addComponent(TXTDNI))
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(TXTCELULAR, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                        .addComponent(TXTDNI, javax.swing.GroupLayout.Alignment.LEADING)))
                 .addContainerGap(221, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -563,11 +492,7 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
         TXTNOMBRE.setText(TBLPERSONA.getValueAt(fila, 1).toString());
         TXTAPEPATERNO.setText(TBLPERSONA.getValueAt(fila, 2).toString());
         TXTAPEMATERNO.setText(TBLPERSONA.getValueAt(fila, 3).toString());
-        try {
-            TXTNACIMIENTO.setDate(formateador.parse(TBLPERSONA.getValueAt(fila, 4).toString()));
-        } catch (ParseException ex) {
-            Logger.getLogger(V01GestionarPersona.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        TXTNACIMIENTO.setText(TBLPERSONA.getValueAt(fila, 4).toString());
         TXTDNI.setText(TBLPERSONA.getValueAt(fila, 5).toString());
         TXTCELULAR.setText(TBLPERSONA.getValueAt(fila, 6).toString());
         TXTDIRECCION.setText(TBLPERSONA.getValueAt(fila, 7).toString());
@@ -613,7 +538,7 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
         TXTDIRECCION.setEnabled(false);
         TXTEMAIL.setEnabled(false);
         TXTFACEBOOK.setEnabled(false);
-        CHKESTADO.setEnabled(false);
+//        CHKESTADO.setEnabled(false);
         CHKESTADO.setSelected(false);
 
         BTNNUEVO.setEnabled(true);
@@ -625,7 +550,7 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
         TXTNOMBRE.setText("");
         TXTAPEPATERNO.setText("");
         TXTAPEMATERNO.setText("");
-        TXTNACIMIENTO.setDate(null);
+        TXTNACIMIENTO.setText("");
         TXTDNI.setText("");
         TXTCELULAR.setText("");
         TXTDIRECCION.setText("");
@@ -661,7 +586,7 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
             TXTNOMBRE.setText("");
             TXTAPEPATERNO.setText("");
             TXTAPEMATERNO.setText("");
-            TXTNACIMIENTO.setDate(null);
+            TXTNACIMIENTO.setText("");
             TXTDNI.setText("");
             TXTCELULAR.setText("");
             TXTDIRECCION.setText("");
@@ -696,8 +621,7 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
         oUsuarioBE.setNombre(TXTNOMBRE.getText());
         oUsuarioBE.setAppaterno(TXTAPEPATERNO.getText());
         oUsuarioBE.setApmaterno(TXTAPEMATERNO.getText());
-        oUsuarioBE.setFecha_nacimiento(String.valueOf(formateador.format(TXTNACIMIENTO.getDate())));
-//        System.out.println("Fecha Ojoooooo siiiiiii jajajaj: " + String.valueOf(formateador.format(TXTNACIMIENTO.getDate())));
+        oUsuarioBE.setFecha_nacimiento(TXTNACIMIENTO.getText());
         oUsuarioBE.setNrodocumento(TXTDNI.getText());
         oUsuarioBE.setTelefonomovil(TXTCELULAR.getText());
         oUsuarioBE.setDireccion(TXTDIRECCION.getText());
@@ -723,16 +647,17 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
 
             if (opcion == 0) {
 //--------------------FALTA EL METODO ADDPERSONA--------------------------------
-
-                System.out.println("Nombrrrrrre " + oUsuarioBE.getNombre());
-
+               
+                  System.out.println("Nombrrrrrre "+oUsuarioBE.getNombre());
+                       
+                       
                 UsuarioBE respuesta = oUsuarioBL.addUser(oUsuarioBE);
 
                 if (respuesta.getIndOpSp() != 1) {
                     JOptionPane.showMessageDialog(this, "Ha fallado");
                 } else {
                     JOptionPane.showMessageDialog(this, "Se ha realizado la Operación");
-                    cargarDatosInicialesTabla1(TXTBUSCAR.getText());
+                    cargarDatosInicialesTabla1();
                 }
 
             } else {
@@ -753,7 +678,7 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Ha fallado");
                 } else {
                     JOptionPane.showMessageDialog(this, "Se ha realizado la Operación");
-                    cargarDatosInicialesTabla1(TXTBUSCAR.getText());
+                    cargarDatosInicialesTabla1();
                 }
 
             } else {
@@ -813,16 +738,9 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_BTNGUARDARActionPerformed
 
     private void TXTBUSCARKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TXTBUSCARKeyTyped
-//        trsfiltro = new TableRowSorter(TBLPERSONA.getModel());
-//        TBLPERSONA.setRowSorter(trsfiltro);
-
-        String nom = TXTBUSCAR.getText();
-        if (nom.equalsIgnoreCase(null) || nom.length() < 2) {
-            limpiartabla(TBLPERSONA);
-
-        } else {
-            cargarDatosInicialesTabla1(TXTBUSCAR.getText());
-        }
+        //REALIZA LOS FILTROS(BUSQUEDAS)
+        trsfiltro = new TableRowSorter(TBLPERSONA.getModel());
+        TBLPERSONA.setRowSorter(trsfiltro);
 
         String nombre = TXTBUSCAR.getText();
         if (nombre.length() > 0) {
@@ -830,22 +748,8 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
             nombre = Character.toUpperCase(primero) + nombre.substring(1, nombre.length()).toLowerCase();
             TXTBUSCAR.setText(nombre);
         }
-    }
-
-    public DefaultTableModel limpiartabla(JTable tabla) {
-        try {
-            DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-            int filas = tabla.getRowCount();
-            for (int i = 0; filas > i; i++) {
-                modelo.removeRow(0);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
-        }
-        return null;
-
-
     }//GEN-LAST:event_TXTBUSCARKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BTNBUSCAR;
@@ -863,8 +767,7 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
     private javax.swing.JTextField TXTEMAIL;
     private javax.swing.JTextField TXTFACEBOOK;
     private javax.swing.JTextField TXTID;
-    private com.toedter.calendar.JDateChooser TXTNACIMIENTO;
-    private javax.swing.JTextField TXTNACIMIENTO1;
+    private javax.swing.JTextField TXTNACIMIENTO;
     private javax.swing.JTextField TXTNOMBRE;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton6;
@@ -886,14 +789,14 @@ public class V01GestionarPersona extends javax.swing.JInternalFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 
-////REALIZA LOS FILTROS(BUSQUEDAS)
-//    public void filtro() {
-//
-//        filtro = TXTBUSCAR.getText();
-//
-//        trsfiltro.setRowFilter(RowFilter.regexFilter(TXTBUSCAR.getText(), 1));
-//    }
-////-----------------------------------------------------------------------------   
-//    private TableRowSorter trsfiltro;
-//    String filtro;
+//REALIZA LOS FILTROS(BUSQUEDAS)
+    public void filtro() {
+
+        filtro = TXTBUSCAR.getText();
+
+        trsfiltro.setRowFilter(RowFilter.regexFilter(TXTBUSCAR.getText(), 1));
+    }
+//-----------------------------------------------------------------------------   
+    private TableRowSorter trsfiltro;
+    String filtro;
 }

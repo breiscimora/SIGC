@@ -1,7 +1,6 @@
 package DAO;
 
 import Beans.RolBE;
-import Beans.UsuarioBE;
 import java.sql.CallableStatement;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,14 +10,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
- * @author CESDE Modificado por Herverth
+ * @author CESDE 
+ * Modificado por Herverth
  */
-
-// REALIZADO POR HUAYCHA GALINDO DIEGO KEVIN
 public class RolDA extends BaseDA {
 
     String cadenaConexion;
@@ -136,7 +133,7 @@ public class RolDA extends BaseDA {
             for (RolBE oRolBE : oListaRolBE) {
                 cs = cn.prepareCall("{call uspInsertarRol(?,?,?)}");
                 cs.setString(1, oRolBE.getNombrerol());
-                cs.setBoolean(2, oRolBE.getEstado());
+                cs.setBoolean(2, oRolBE.isEstado());
                 cs.registerOutParameter(3, java.sql.Types.INTEGER);
                 cs.execute();
                 resultado = cs.getInt(3);
@@ -169,7 +166,7 @@ public class RolDA extends BaseDA {
 
             cs = cn.prepareCall("{call uspInsertarRol(?,?,?)}");
             cs.setString(1, oRolBE.getNombrerol());
-            cs.setBoolean(2, oRolBE.getEstado());
+            cs.setBoolean(2, oRolBE.isEstado());
             cs.registerOutParameter(3, java.sql.Types.INTEGER);
             cs.execute();
             resultado = cs.getInt(3);
@@ -202,7 +199,7 @@ public class RolDA extends BaseDA {
             cs = cn.prepareCall("{call uspActualizarRol(?,?,?)}");
             cs.setInt(1, oRolBE.getIdrol());
             cs.setString(2, oRolBE.getNombrerol());
-            cs.setBoolean(3, oRolBE.getEstado());
+            cs.setBoolean(3, oRolBE.isEstado());
             cs.registerOutParameter(3, java.sql.Types.INTEGER);
             cs.executeUpdate();
             resultado = cs.getInt(3);
@@ -242,91 +239,5 @@ public class RolDA extends BaseDA {
             cn = null;
         }
         return rs;
-    }
-
-    public List<RolBE> listarRoles() {
-        ArrayList<RolBE> listarRol = new ArrayList<>();
-        UtilDAO oUtilDAO = new UtilDAO();
-
-        oUtilDAO.ejecutarQuery("select * from rol  ");
-
-        ResultSet resultados = oUtilDAO.ejecutarQuery("select * from rol  ");
-
-        try {
-            while (resultados.next()) {
-
-                RolBE oRolBE = new RolBE();
-
-                int id = resultados.getInt("idrol");
-                String nombrerol = resultados.getString("nombrerol");
-                boolean estado = resultados.getBoolean("estado");
-                String descripcion = resultados.getString("descripcion");
-
-                oRolBE.setIdrol(id);
-                oRolBE.setNombrerol(nombrerol);
-                oRolBE.setEstado(estado);
-                oRolBE.setDescripcion(descripcion);
-
-                listarRol.add(oRolBE);
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        return listarRol;
-    }
-
-    public RolBE addRol(RolBE oRolBE) {
-
-        UtilDAO oUtilDAO = new UtilDAO();
-
-        String cadquery = ("insert into "
-                + " rol(nombrerol,estado,descripcion) values ("
-                + " '" + oRolBE.getNombrerol() + "'"
-                + ", '" + oRolBE.getEstado() + "'"
-                + ", '" + oRolBE.getDescripcion() + "');");
-
-        int cad = oUtilDAO.ejecutarUpdate(cadquery);
-
-        System.out.println("resultado" + cad);
-        try {
-
-            oRolBE.setIndOpSp(1);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            oRolBE.setIndOpSp(2);
-        }
-
-        return oRolBE;
-    }
-
-    public RolBE updateRol(RolBE oRolBE) {
-
-        UtilDAO oUtilDAO = new UtilDAO();
-        try {
-            String cadquery = ("update rol "
-                    + " set nombrerol = '" + oRolBE.getNombrerol() + "' "
-                    + " ,estado = '" + oRolBE.getEstado() + "' "
-                    + " ,descripcion = '" + oRolBE.getDescripcion() + "' "
-                    + " where idrol= " + oRolBE.getIdrol() + ";");
-
-            int cad = oUtilDAO.ejecutarUpdate(cadquery);
-
-            System.out.println("resultado" + cad);
-
-            oRolBE.setIndOpSp(1);
-
-            //se realiza la comprobacion de la actualizacion.
-            if (cad == 1) {
-                oRolBE.setIndOpSp(1);
-            } else {
-                oRolBE.setIndOpSp(2);
-            }
-
-        } catch (Exception e) {
-            oRolBE.setIndOpSp(2);
-        }
-
-        return oRolBE;
     }
 }
